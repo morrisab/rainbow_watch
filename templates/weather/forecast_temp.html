@@ -1,0 +1,24 @@
+{% extends "weather/base.html" %}
+
+
+{% block body %}
+    <h1>This is your weather forecast for {{ now_data.name }}</h1>
+
+
+    <p>{{ now_data.detailedForecast }}</p>
+
+
+
+    <ul>
+        <li>
+            Temperature: {{ now_data.temperature }} {{ now_data.temperatureUnit }}
+        </li>
+        <li>
+            Wind: {{ now_data.windSpeed }} from the {{ now_dir }}
+        </li>
+    </ul>
+{% endblock %}
+
+{% block extra_title %}
+for {{ now_data.name }}
+{% endblock %}
