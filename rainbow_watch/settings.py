@@ -11,17 +11,22 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import psycopg2
 
 import django_heroku
 
+import dj_database_url
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from decouple import config
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', default='default')
+SECRET_KEY = 'default'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'weather'
 ]
 
 MIDDLEWARE = [
@@ -75,8 +81,11 @@ WSGI_APPLICATION = 'rainbow_watch.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DATABASE_NAME', default=''),
+        'USER': config('DATABASE_USER', default=''),
+        'HOST': config('DATABASE_HOST', default=''),
+        'PORT': config('DATABASE_PORT', default=''),
     }
 }
 
@@ -117,3 +126,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 django_heroku.settings(locals())
+
+GEONAMES_USER = os.environ['GEONAMES_USER']
+
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)

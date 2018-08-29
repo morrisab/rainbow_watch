@@ -1,10 +1,33 @@
 import requests
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 
 # Create your views here.
-def hello(request, name='Morrisa'):
-    return render(request, "weather/hello.html", {'name': name})
+from rainbow_watch.settings import GEONAMES_USER
+from weather.models import Location
+
+
+def get_forecast_zip(request, zip_code):
+    zip_entry = Location.objects.get_or_create(zip=zip_code)
+    if zip_entry[1]:
+        geonames_endpoint = 'http://api.geonames.org/postalCodeSearchJSON?postalcode={zip}&country=US&username={user}'
+        zip_data = requests.get(geonames_endpoint.format(zip=zip_code, user=GEONAMES_USER))
+        # Location.objects.update(zip=zip_code, lat=zip_data.json()['postalCodes'][0]['lat'],
+        #                         lon=zip_data.json()['postalCodes'][0]['lng'])
+    final_endpoint = '/forecast/{lat},{lon}'
+    # forecast_data = requests.get(final_endpoint.format(lat=zip_data.json()['postalCodes'][0]['lat'],
+    #                                                    lon=zip_data.json()['postalCodes'][0]['lng']))
+    return HttpResponseRedirect(final_endpoint.format(lat=zip_data.json()['postalCodes'][0]['lat'],
+                                                       lon=zip_data.json()['postalCodes'][0]['lng']))
+    # dir_strs = get_dir_strs(forecast_data)
+    # return render(request, "weather/forecast_temp.html",
+    #               {'now_data': forecast_data.json()['properties']['periods'][0], 'now_dir': dir_strs[0]})
+    # zip_entry = Location.objects.get_or_create(zip=zip_code)
+    # if zip_entry[1]:
+    #     endpoint = 'http://api.geonames.org/postalCodeSearchJSON?postalcode={zip}&username={user}'
+    #     zip_data = requests.get(endpoint.format(zip=zip_code, user=GEONAMES_USER))
+    # return render(request, "weather/generic_display.html", {'data': zip_data})
 
 
 def get_forecast_latlon(request, lat, lon):

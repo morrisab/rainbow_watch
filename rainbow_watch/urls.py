@@ -20,7 +20,6 @@ from weather import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('hello/', views.hello),
-    path('hello/<name>/', views.hello),
-    path('forecast/<lat>,<lon>', views.get_forecast_latlon)
+    path('forecast/<lat>,<lon>', views.get_forecast_latlon),
+    path('forecast/<zip_code>', views.get_forecast_zip)
 ]
