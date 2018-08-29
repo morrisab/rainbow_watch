@@ -13,13 +13,13 @@ def get_forecast_zip(request, zip_code):
     if zip_entry[1]:
         geonames_endpoint = 'http://api.geonames.org/postalCodeSearchJSON?postalcode={zip}&country=US&username={user}'
         zip_data = requests.get(geonames_endpoint.format(zip=zip_code, user=GEONAMES_USER))
-        # Location.objects.update(zip=zip_code, lat=zip_data.json()['postalCodes'][0]['lat'],
-        #                         lon=zip_data.json()['postalCodes'][0]['lng'])
+        Location.objects.update(zip=zip_code, lat=zip_data.json()['postalCodes'][0]['lat'],
+                                lon=zip_data.json()['postalCodes'][0]['lng'])
     final_endpoint = '/forecast/{lat},{lon}'
     # forecast_data = requests.get(final_endpoint.format(lat=zip_data.json()['postalCodes'][0]['lat'],
     #                                                    lon=zip_data.json()['postalCodes'][0]['lng']))
-    return HttpResponseRedirect(final_endpoint.format(lat=zip_data.json()['postalCodes'][0]['lat'],
-                                                       lon=zip_data.json()['postalCodes'][0]['lng']))
+    return HttpResponseRedirect(final_endpoint.format(lat=Location.objects.get(zip=zip_code).lat,
+                                                      lon=Location.objects.get(zip=zip_code).lon))
     # dir_strs = get_dir_strs(forecast_data)
     # return render(request, "weather/forecast_temp.html",
     #               {'now_data': forecast_data.json()['properties']['periods'][0], 'now_dir': dir_strs[0]})
