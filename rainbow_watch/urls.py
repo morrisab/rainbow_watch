@@ -19,7 +19,7 @@ from django.urls import path
 from weather import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('forecast/<lat>,<lon>', views.get_forecast_latlon),
-    path('forecast/<zip_code>', views.get_forecast_zip)
+    path('', views.show_home),
+    path('zip_to_lat_lon/<zip_code>', views.get_lat_lon),
+    path('forecast/<lat>,<lon>', views.get_forecast)
 ]

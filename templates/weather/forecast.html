@@ -1,6 +1,11 @@
 {% extends "weather/base.html" %}
 
 
+{% block title %}
+    <title>Forecast for {{ now_data.name }}</title>
+{% endblock %}
+
+
 {% block body %}
     <h1>This is your weather forecast for {{ now_data.name }}</h1>
 
@@ -11,14 +16,10 @@
 
     <ul>
         <li>
-            Temperature: {{ now_data.temperature }} {{ now_data.temperatureUnit }}
+            Temperature: {{ now_data.temperature }} &deg{{ now_data.temperatureUnit }}
         </li>
         <li>
             Wind: {{ now_data.windSpeed }} from the {{ now_dir }}
         </li>
     </ul>
-{% endblock %}
-
-{% block extra_title %}
-for {{ now_data.name }}
 {% endblock %}

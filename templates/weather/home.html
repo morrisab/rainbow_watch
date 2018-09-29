@@ -1,0 +1,57 @@
+{% extends "weather/base.html" %}
+
+
+{% block title %}
+    <title>Rainbow Watch Homepage</title>
+{% endblock %}
+
+
+{% block body %}
+    <h1>Welcome to Rainbow Watch!</h1>
+
+
+    <p>Enter your zip code below and select which type of forecast you'd like to see.</p>
+
+    <form class="weather-submission" novalidate id = "zip-form" action = "" method = post>{% csrf_token %}
+        <div class="form-group">
+            <label for="zipBox">Zip Code</label>
+            <input type="text" class="form-control" id="zipBox" placeholder="Enter zip code" oninput="check_zip(this)" required>
+            <div class="valid-feedback">
+                Zip code looks good!
+            </div>
+            <div class="invalid-feedback">
+                Please provide a valid zip code.
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Go</button>
+    </form>
+
+    <script>
+      function check_zip(input) {
+        if (isNaN(input.value) ||
+            input.value.length != 5) {
+          input.setCustomValidity("Invalid value");
+       } else {
+          // input is fine -- reset the error message
+          input.setCustomValidity("");
+        }
+      }
+      // Form submission javascript - checks validity
+      (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+          var validation = Array.prototype.filter.call(document.getElementsByClassName('weather-submission'), function(form) {
+            form.addEventListener('submit', function(event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add('was-validated');
+              form.setAttribute('action', 'zip_to_lat_lon/' + document.getElementById('zipBox').value)
+            }, false);
+          });
+        }, false);
+      })();
+    </script>
+
+{% endblock %}

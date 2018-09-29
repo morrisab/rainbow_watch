@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-import psycopg2
 
 import django_heroku
 
@@ -20,6 +19,7 @@ import dj_database_url
 from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.conf.global_settings import DATABASES
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -77,16 +77,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rainbow_watch.wsgi.application'
 
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -125,6 +115,6 @@ STATIC_URL = '/static/'
 
 django_heroku.settings(locals())
 
-GEONAMES_USER = os.environ['GEONAMES_USER']
+GEONAMES_USER = config('GEONAMES_USER')
 
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
